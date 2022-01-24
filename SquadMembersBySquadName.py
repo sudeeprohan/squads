@@ -3,15 +3,9 @@ import base64
 import os
 
 #Getting Bearer Access token 
-#Set a variable for app_short_name with Value 'AppSec'
-#Get all the squads and filtering with app_short_name to get the Squad id 
-#With Squad id - retrieving all the squad member details
+#With Squad Name - retrieving all the squad member details
 # Here collected only the member aaId as list. 
 
-# username = "115b27f7-ebad-4690-b27f-3fee76aaa412"
-# password = "MDVhNWRlYzctNmYyNy00Y2NiLWE3MjQtMmJmODg4Yzg3ZjM1"
-
-#os.environ['client_id'] = "115b27f7-ebad-4690-b27f-3fee76aaa412"
 username = os.getenv('user')
 password = os.getenv('password')
 
@@ -35,9 +29,10 @@ headerDetails = {
 
 class squad360API:
 
-    #Retrieve Squad ID from Squad API - with squad name 
-    #With response filtering squad ID for provided squad name
-    #https://squad360.mybluemix.net/api/simple/squads  
+    #Retrieve Squad Members from Squad API - with squad name as input 
+    #calling 2 squad Api's here 
+    #1. calling 'https://squad360.mybluemix.net/api/simple/squads' to get the squad Id 
+    #2, Calling 'https://squad360.mybluemix.net/api/simple/squads/{squadid}/members' to get the squad members from squad id
     def getSquadMembersBySquadName(self,squadName):
         #retrieving all squads and filtering with squad name filter
         squad_id = None
@@ -45,16 +40,15 @@ class squad360API:
         squad_member_ids = []
         allSquads_response  = requests.get('https://squad360.mybluemix.net/api/simple/squads', headers = headerDetails , verify = True )
         for squad in allSquads_response.json():
-            if(squad['alias1'] != None and squadName in squad['alias1']):
+            if(squad['name'] != None and squadName in squad['name']):
                 squad_id = squad['id']
                 break
-            elif(squad['alias2'] != None and squadName in squad['alias2']):
-                squad_id = squad['id']
-                break
-            elif(squad['name'] != None and squadName in squad['name']):
-                squad_id = squad['id']
-                break
-        print ("Squad Id -> "+str(squad_id))
+            # elif(squad['alias2'] != None and squadName in squad['alias2']):
+            #     squad_id = squad['id']
+            #     break
+            # elif(squad['alias1'] != None and squadName in squad['alias1']):
+            #     squad_id = squad['id']
+            #     break
         if squad_id != None:
             squad_member_response = requests.get('https://squad360.mybluemix.net/api/simple/squads/' +str(squad_id)+'/members', headers = headerDetails , verify = True)
             squad_members = squad_member_response.json()['members']
@@ -66,8 +60,9 @@ class squad360API:
 api = squad360API()
 
 #passing squad name to the method call
-squad_name = '29C' #<----Change Squad name here
+squad_name = 'A/V Digital Signage' #######################################<----Change Squad name here
 
+#printing
+#
 squad_member_ids = api.getSquadMembersBySquadName(squad_name)
-print ("Result for Squad Name : "+squad_name+"\n")
-
+print ("Squad Members for Squad name :"+str(squad_name)+" --> "+str(squad_member_ids)+"\n")
