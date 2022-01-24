@@ -1,4 +1,3 @@
-from http import client
 import requests
 import base64
 import os
@@ -8,9 +7,6 @@ import os
 #Get all the squads and filtering with app_short_name to get the Squad id 
 #With Squad id - retrieving all the squad member details
 # Here collected only the member aaId as list. 
-
-# username = "115b27f7-ebad-4690-b27f-3fee76aaa412"
-# password = "MDVhNWRlYzctNmYyNy00Y2NiLWE3MjQtMmJmODg4Yzg3ZjM1"
 
 #os.environ['client_id'] = "115b27f7-ebad-4690-b27f-3fee76aaa412"
 username = os.getenv('user')
